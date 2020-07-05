@@ -73,11 +73,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function AppComponent_div_28_Template(rf, ctx) { if (rf & 1) {
+function AppComponent_div_32_Template(rf, ctx) { if (rf & 1) {
     const _r3 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 21);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AppComponent_div_28_Template_div_click_0_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r3); const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r2.userClickOnIcon($event); });
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](1, "img", 22);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 22);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function AppComponent_div_32_Template_div_click_0_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵrestoreView"](_r3); const ctx_r2 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"](); return ctx_r2.userClickOnIcon($event); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](1, "img", 23);
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 } if (rf & 2) {
     const iconList_r1 = ctx.$implicit;
@@ -149,31 +149,38 @@ class AppComponent {
         ];
         this.crossCount = 0;
         this.zeroCount = 0;
+        this.drawCount = 0;
+        this.matchEndFlag = false;
         this.userClickOnIcon = (event) => {
-            var index = event.currentTarget.getElementsByTagName('img')[0].dataset.index;
-            var iconName = event.currentTarget.getElementsByTagName('img')[0].dataset.name;
-            if (iconName !== 'edit') {
-                if (iconName === 'zero') {
-                    this.toster.info(iconName + ' already clicked.', '', { timeOut: 1000 });
+            if (!this.matchEndFlag) {
+                var index = event.currentTarget.getElementsByTagName('img')[0].dataset.index;
+                var iconName = event.currentTarget.getElementsByTagName('img')[0].dataset.name;
+                if (iconName !== 'edit') {
+                    if (iconName === 'zero') {
+                        this.toster.info(iconName + ' already clicked.', '', { timeOut: 1000 });
+                    }
+                    else {
+                        this.toster.error(iconName + ' already clicked.', '', { timeOut: 1000 });
+                    }
                 }
                 else {
-                    this.toster.error(iconName + ' already clicked.', '', { timeOut: 1000 });
+                    if (this.playerFlag) {
+                        this.iconsArr[index].icon_name = 'zero';
+                        this.iconsArr[index].icon_path = this.iconPathArr[2];
+                        this.lastPlayedPlayer = 'zero';
+                    }
+                    else {
+                        this.iconsArr[index].icon_name = 'cross';
+                        this.iconsArr[index].icon_path = this.iconPathArr[1];
+                        this.lastPlayedPlayer = 'cross';
+                    }
+                    this.playerFlag = !this.playerFlag;
                 }
+                this.gameMainLogic();
             }
             else {
-                if (this.playerFlag) {
-                    this.iconsArr[index].icon_name = 'zero';
-                    this.iconsArr[index].icon_path = this.iconPathArr[2];
-                    this.lastPlayedPlayer = 'zero';
-                }
-                else {
-                    this.iconsArr[index].icon_name = 'cross';
-                    this.iconsArr[index].icon_path = this.iconPathArr[1];
-                    this.lastPlayedPlayer = 'cross';
-                }
-                this.playerFlag = !this.playerFlag;
+                this.toster.info('Match Ended Please click reset for new game.', '', { timeOut: 2000 });
             }
-            this.gameMainLogic();
         };
         this.resetGame = (event) => {
             var initalArr = [
@@ -234,35 +241,59 @@ class AppComponent {
             ];
             this.playerFlag = false;
             this.iconsArr = initalArr;
+            this.matchEndFlag = false;
         };
+    }
+    ngOnInit() {
+        this.toster.info('Note : This is two player game.', '', { timeOut: 2000 });
+        setTimeout(() => {
+            this.toster.success('Lets Begain Game.', '', { timeOut: 2000 });
+        }, 2000);
     }
     gameMainLogic() {
         var flag = false;
-        if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[1].icon_name && this.iconsArr[0].icon_name === this.iconsArr[2].icon_name) {
-            flag = true;
+        var iconFlag = false;
+        this.iconsArr.forEach((value) => {
+            if (value.icon_name === 'edit') {
+                iconFlag = true;
+            }
+        });
+        if (iconFlag) {
+            if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[1].icon_name && this.iconsArr[0].icon_name === this.iconsArr[2].icon_name) {
+                flag = true;
+            }
+            else if (this.iconsArr[3].icon_name !== 'edit' && this.iconsArr[3].icon_name === this.iconsArr[4].icon_name && this.iconsArr[3].icon_name === this.iconsArr[5].icon_name) {
+                flag = true;
+            }
+            else if (this.iconsArr[6].icon_name !== 'edit' && this.iconsArr[6].icon_name === this.iconsArr[7].icon_name && this.iconsArr[6].icon_name === this.iconsArr[8].icon_name) {
+                flag = true;
+            }
+            else if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[4].icon_name && this.iconsArr[0].icon_name === this.iconsArr[8].icon_name) {
+                flag = true;
+            }
+            else if (this.iconsArr[2].icon_name !== 'edit' && this.iconsArr[2].icon_name === this.iconsArr[4].icon_name && this.iconsArr[2].icon_name === this.iconsArr[6].icon_name) {
+                flag = true;
+            }
+            else if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[3].icon_name && this.iconsArr[0].icon_name === this.iconsArr[6].icon_name) {
+                flag = true;
+            }
+            else if (this.iconsArr[1].icon_name !== 'edit' && this.iconsArr[1].icon_name === this.iconsArr[4].icon_name && this.iconsArr[1].icon_name === this.iconsArr[7].icon_name) {
+                flag = true;
+            }
+            else if (this.iconsArr[2].icon_name !== 'edit' && this.iconsArr[2].icon_name === this.iconsArr[5].icon_name && this.iconsArr[2].icon_name === this.iconsArr[8].icon_name) {
+                flag = true;
+            }
         }
-        else if (this.iconsArr[3].icon_name !== 'edit' && this.iconsArr[3].icon_name === this.iconsArr[4].icon_name && this.iconsArr[3].icon_name === this.iconsArr[5].icon_name) {
-            flag = true;
-        }
-        else if (this.iconsArr[6].icon_name !== 'edit' && this.iconsArr[6].icon_name === this.iconsArr[7].icon_name && this.iconsArr[6].icon_name === this.iconsArr[8].icon_name) {
-            flag = true;
-        }
-        else if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[4].icon_name && this.iconsArr[0].icon_name === this.iconsArr[8].icon_name) {
-            flag = true;
-        }
-        else if (this.iconsArr[2].icon_name !== 'edit' && this.iconsArr[2].icon_name === this.iconsArr[4].icon_name && this.iconsArr[2].icon_name === this.iconsArr[6].icon_name) {
-            flag = true;
-        }
-        else if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[3].icon_name && this.iconsArr[0].icon_name === this.iconsArr[6].icon_name) {
-            flag = true;
-        }
-        else if (this.iconsArr[1].icon_name !== 'edit' && this.iconsArr[1].icon_name === this.iconsArr[4].icon_name && this.iconsArr[1].icon_name === this.iconsArr[7].icon_name) {
-            flag = true;
-        }
-        else if (this.iconsArr[2].icon_name !== 'edit' && this.iconsArr[2].icon_name === this.iconsArr[5].icon_name && this.iconsArr[2].icon_name === this.iconsArr[8].icon_name) {
-            flag = true;
+        else {
+            this.matchEndFlag = true;
+            this.drawCount = this.drawCount + 1;
+            this.toster.warning('Match draw', '', { timeOut: 2000 });
+            setTimeout(() => {
+                this.toster.info('Click Reset For Start New Game.', '', { timeOut: 2000 });
+            }, 2000);
         }
         if (flag) {
+            this.matchEndFlag = true;
             setTimeout(() => {
                 this.toster.info('Click Reset For Start New Game.', '', { timeOut: 2000 });
             }, 2000);
@@ -278,7 +309,7 @@ class AppComponent {
     }
 }
 AppComponent.ɵfac = function AppComponent_Factory(t) { return new (t || AppComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](ngx_toastr__WEBPACK_IMPORTED_MODULE_1__["ToastrService"])); };
-AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AppComponent, selectors: [["app-root"]], decls: 33, vars: 3, consts: [[1, "header"], [1, "header-container"], [1, "header-text"], [1, "first"], [1, "second"], [1, "third"], [1, "container", "main-contnet"], [1, "content-data"], [1, "row", "main-container"], [1, "col-12", "result-container"], [1, "reset-btn"], [1, "btn", "btn-primary", 3, "click"], [1, "score-text"], [1, "x-score-text"], [1, "y-score-text"], [1, "col-12"], [1, "row", "main-container", "box-mob-container"], [3, "ngClass", "click", 4, "ngFor", "ngForOf"], [1, "footer"], [1, "footer-container"], [1, "footer-text"], [3, "ngClass", "click"], [1, "edit-img"]], template: function AppComponent_Template(rf, ctx) { if (rf & 1) {
+AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AppComponent, selectors: [["app-root"]], decls: 37, vars: 4, consts: [[1, "header"], [1, "header-container"], [1, "header-text"], [1, "first"], [1, "second"], [1, "third"], [1, "container", "main-contnet"], [1, "content-data"], [1, "row", "main-container"], [1, "col-12", "result-container"], [1, "reset-btn"], [1, "btn", "btn-primary", 3, "click"], [1, "score-text"], [1, "x-score-text"], [1, "y-score-text"], [1, "draw-score-text"], [1, "col-12"], [1, "row", "main-container", "box-mob-container"], [3, "ngClass", "click", 4, "ngFor", "ngForOf"], [1, "footer"], [1, "footer-container"], [1, "footer-text"], [3, "ngClass", "click"], [1, "edit-img"]], template: function AppComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 2);
@@ -319,19 +350,25 @@ AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCompo
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](25);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](26, "div", 15);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](27, "div", 16);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](28, AppComponent_div_28_Template, 2, 4, "div", 17);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](27, " Draw: ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](28, "span");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](29);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](30, "div", 16);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "div", 17);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](32, AppComponent_div_32_Template, 2, 4, "div", 18);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](29, "div", 18);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](30, "div", 19);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](31, "div", 20);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](32, " Made By @Kush K Ashar ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](33, "div", 19);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](34, "div", 20);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](35, "div", 21);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](36, " Made By @Kush K Ashar ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -340,6 +377,8 @@ AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCompo
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.crossCount);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.zeroCount);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.drawCount);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.iconsArr);
     } }, directives: [_angular_common__WEBPACK_IMPORTED_MODULE_2__["NgForOf"], _angular_common__WEBPACK_IMPORTED_MODULE_2__["NgClass"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2FwcC5jb21wb25lbnQuc2NzcyJ9 */"] });
