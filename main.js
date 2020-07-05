@@ -255,7 +255,7 @@ class AppComponent {
     }
     playAudio() {
         let audio = new Audio();
-        audio.src = "https://www.fesliyanstudios.com/play-mp3/387";
+        audio.src = "../assets/audio/mouse-click.mp3";
         audio.load();
         this.audio = audio;
         let xwin = new Audio();
