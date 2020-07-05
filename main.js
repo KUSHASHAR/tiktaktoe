@@ -152,6 +152,7 @@ class AppComponent {
         this.drawCount = 0;
         this.matchEndFlag = false;
         this.userClickOnIcon = (event) => {
+            this.audio.play();
             if (!this.matchEndFlag) {
                 var index = event.currentTarget.getElementsByTagName('img')[0].dataset.index;
                 var iconName = event.currentTarget.getElementsByTagName('img')[0].dataset.name;
@@ -183,6 +184,7 @@ class AppComponent {
             }
         };
         this.resetGame = (event) => {
+            this.audio.play();
             var initalArr = [
                 {
                     "icon_name": 'edit',
@@ -245,10 +247,29 @@ class AppComponent {
         };
     }
     ngOnInit() {
+        this.playAudio();
         this.toster.info('Note : This is two player game.', '', { timeOut: 2000 });
         setTimeout(() => {
-            this.toster.success('Lets Begain Game.', '', { timeOut: 2000 });
+            this.toster.success('Lets the game Begin.', '', { timeOut: 2000 });
         }, 2000);
+    }
+    playAudio() {
+        let audio = new Audio();
+        audio.src = "https://www.fesliyanstudios.com/play-mp3/387";
+        audio.load();
+        this.audio = audio;
+        let xwin = new Audio();
+        xwin.src = "../assets/audio/x.mp3";
+        xwin.load();
+        this.xwin = xwin;
+        let zerowin = new Audio();
+        zerowin.src = "../assets/audio/zero.mp3";
+        zerowin.load();
+        this.zerowin = zerowin;
+        let draw = new Audio();
+        draw.src = "../assets/audio/draw.mp3";
+        draw.load();
+        this.draw = draw;
     }
     gameMainLogic() {
         var flag = false;
@@ -258,39 +279,29 @@ class AppComponent {
                 iconFlag = true;
             }
         });
-        if (iconFlag) {
-            if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[1].icon_name && this.iconsArr[0].icon_name === this.iconsArr[2].icon_name) {
-                flag = true;
-            }
-            else if (this.iconsArr[3].icon_name !== 'edit' && this.iconsArr[3].icon_name === this.iconsArr[4].icon_name && this.iconsArr[3].icon_name === this.iconsArr[5].icon_name) {
-                flag = true;
-            }
-            else if (this.iconsArr[6].icon_name !== 'edit' && this.iconsArr[6].icon_name === this.iconsArr[7].icon_name && this.iconsArr[6].icon_name === this.iconsArr[8].icon_name) {
-                flag = true;
-            }
-            else if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[4].icon_name && this.iconsArr[0].icon_name === this.iconsArr[8].icon_name) {
-                flag = true;
-            }
-            else if (this.iconsArr[2].icon_name !== 'edit' && this.iconsArr[2].icon_name === this.iconsArr[4].icon_name && this.iconsArr[2].icon_name === this.iconsArr[6].icon_name) {
-                flag = true;
-            }
-            else if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[3].icon_name && this.iconsArr[0].icon_name === this.iconsArr[6].icon_name) {
-                flag = true;
-            }
-            else if (this.iconsArr[1].icon_name !== 'edit' && this.iconsArr[1].icon_name === this.iconsArr[4].icon_name && this.iconsArr[1].icon_name === this.iconsArr[7].icon_name) {
-                flag = true;
-            }
-            else if (this.iconsArr[2].icon_name !== 'edit' && this.iconsArr[2].icon_name === this.iconsArr[5].icon_name && this.iconsArr[2].icon_name === this.iconsArr[8].icon_name) {
-                flag = true;
-            }
+        if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[1].icon_name && this.iconsArr[0].icon_name === this.iconsArr[2].icon_name) {
+            flag = true;
         }
-        else {
-            this.matchEndFlag = true;
-            this.drawCount = this.drawCount + 1;
-            this.toster.warning('Match draw', '', { timeOut: 2000 });
-            setTimeout(() => {
-                this.toster.info('Click Reset For Start New Game.', '', { timeOut: 2000 });
-            }, 2000);
+        else if (this.iconsArr[3].icon_name !== 'edit' && this.iconsArr[3].icon_name === this.iconsArr[4].icon_name && this.iconsArr[3].icon_name === this.iconsArr[5].icon_name) {
+            flag = true;
+        }
+        else if (this.iconsArr[6].icon_name !== 'edit' && this.iconsArr[6].icon_name === this.iconsArr[7].icon_name && this.iconsArr[6].icon_name === this.iconsArr[8].icon_name) {
+            flag = true;
+        }
+        else if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[4].icon_name && this.iconsArr[0].icon_name === this.iconsArr[8].icon_name) {
+            flag = true;
+        }
+        else if (this.iconsArr[2].icon_name !== 'edit' && this.iconsArr[2].icon_name === this.iconsArr[4].icon_name && this.iconsArr[2].icon_name === this.iconsArr[6].icon_name) {
+            flag = true;
+        }
+        else if (this.iconsArr[0].icon_name !== 'edit' && this.iconsArr[0].icon_name === this.iconsArr[3].icon_name && this.iconsArr[0].icon_name === this.iconsArr[6].icon_name) {
+            flag = true;
+        }
+        else if (this.iconsArr[1].icon_name !== 'edit' && this.iconsArr[1].icon_name === this.iconsArr[4].icon_name && this.iconsArr[1].icon_name === this.iconsArr[7].icon_name) {
+            flag = true;
+        }
+        else if (this.iconsArr[2].icon_name !== 'edit' && this.iconsArr[2].icon_name === this.iconsArr[5].icon_name && this.iconsArr[2].icon_name === this.iconsArr[8].icon_name) {
+            flag = true;
         }
         if (flag) {
             this.matchEndFlag = true;
@@ -299,12 +310,25 @@ class AppComponent {
             }, 2000);
             this.toster.success(this.lastPlayedPlayer + ' Win', '', { timeOut: 2000 });
             if (this.lastPlayedPlayer === 'cross') {
+                this.xwin.play();
                 this.crossCount = this.crossCount + 1;
             }
             else {
+                this.zerowin.play();
                 this.zeroCount = this.zeroCount + 1;
             }
             // this.resetGame(event);
+        }
+        else {
+            if (!iconFlag) {
+                this.draw.play();
+                this.matchEndFlag = true;
+                this.drawCount = this.drawCount + 1;
+                this.toster.warning('Match draw', '', { timeOut: 2000 });
+                setTimeout(() => {
+                    this.toster.info('Click Reset For Start New Game.', '', { timeOut: 2000 });
+                }, 2000);
+            }
         }
     }
 }
